@@ -80,7 +80,7 @@ SET VAR pkColumns =
 -- Declare a variable to hold the query to analyze the primary key constraint.
 DECLARE queryStr STRING;
 
--- Build the query string based on the table name and teh primary key columns.
+-- Build the query string based on the table name and th primary key columns.
 SET VAR queryStr =
    'SELECT ' || aggregate(pkColumns, '', (list, col) -> list || col || ', ') || ' count(1) AS num_dups '
    '  FROM `' || tableId.catalog || '`. `' || tableId.schema || '`. `' || tableId.name || '` '
@@ -125,11 +125,18 @@ SET VAR queryStr = 'INSERT INTO persons'
                    '  VALUES (\'Josefine\', \'Mausekind\', \'Sprotten vor dem Wind\')';
 EXECUTE IMMEDIATE queryStr;
 
+-- COMMAND ----------
+
+-- DBTITLE 1,SQL Update Persons Location
 SET VAR queryStr = 'UPDATE persons SET location = \'Leuchtturm Josefine\''
                   ' WHERE firstname =\'Josefine\' AND lastname =\'Mausekind\'';
 EXECUTE IMMEDIATE queryStr;
 
+-- COMMAND ----------
+
 EXECUTE IMMEDIATE 'DELETE FROM persons WHERE location = \'Leuchtturm Josefine\'';
+
+-- COMMAND ----------
 
 EXECUTE IMMEDIATE 'ALTER TABLE persons ADD COLUMN dob DATE';
 
@@ -141,25 +148,25 @@ EXECUTE IMMEDIATE 'ALTER TABLE persons ADD COLUMN dob DATE';
 -- COMMAND ----------
 
 -- DBTITLE 1,Using unnamed parameter markers
-EXECUTE IMMEDIATE 'SELECT * FROM persons WHERE firstname = ? AND lastname = ?'
+EXECUTE IMMEDIATE 'SELECT location FROM persons WHERE firstname = ? AND lastname = ?'
   USING 'Tom', 'Sawyer';
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Using named parameter markers
-EXECUTE IMMEDIATE 'SELECT * FROM persons WHERE firstname = :first AND lastname = :last'
+EXECUTE IMMEDIATE 'SELECT location FROM persons WHERE firstname = :first AND lastname = :last'
   USING 'Tom' AS first, 'Sawyer' AS last; 
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Using named parameter markers
-EXECUTE IMMEDIATE 'SELECT * FROM persons WHERE firstname = :first AND lastname = :last'
+EXECUTE IMMEDIATE 'SELECT location FROM persons WHERE firstname = :first AND lastname = :last'
   USING 'Tom' AS first, 'Sawyer' AS last; 
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Using unnamed parameter markers and session variables to bind query and values
-SET VAR queryStr = 'SELECT * FROM persons WHERE firstname = ? AND lastname = ?';
+SET VAR queryStr = 'SELECT location FROM persons WHERE firstname = ? AND lastname = ?';
 DECLARE first = 'Tom';
 DECLARE last = 'Sawyer';
 EXECUTE IMMEDIATE queryStr USING first as first, last as last;
@@ -167,20 +174,20 @@ EXECUTE IMMEDIATE queryStr USING first as first, last as last;
 -- COMMAND ----------
 
 -- DBTITLE 1,Using named parameter markers and session variables to bind query and values
-SET VAR queryStr = 'SELECT * FROM persons WHERE firstname = :first AND lastname = :last';
+SET VAR queryStr = 'SELECT location FROM persons WHERE firstname = :first AND lastname = :last';
 EXECUTE IMMEDIATE queryStr USING last as last, first as first;
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Using named parameter markers and session variables to bind query and values
-SET VAR queryStr = 'SELECT * FROM persons WHERE firstname = :first AND lastname = :last';
+SET VAR queryStr = 'SELECT location FROM persons WHERE firstname = :first AND lastname = :last';
 EXECUTE IMMEDIATE queryStr USING last as last, first as first;
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Using session variables inside the query string
 -- Using session variables inside the query string
-SET VAR queryStr = 'SELECT * FROM persons WHERE firstname = first AND lastname = last';
+SET VAR queryStr = 'SELECT location FROM persons WHERE firstname = first AND lastname = last';
 EXECUTE IMMEDIATE queryStr; 
 
 -- COMMAND ----------
